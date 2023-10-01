@@ -15,7 +15,8 @@
     "next": "latest",
     "p-map": "^6.0.0",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@types/node": "latest",

@@ -6,21 +6,11 @@ type ResponseData = {
   message: string
 }
  
-export function GET() {
-  return NextResponse.json("test",{status : 200});
-}
 
-export async function POST(req : any,res  :any){
-  let payload = await req.json();
-  if (!payload.urls) {
-    return NextResponse.json({ 
-      success : false,
-      message : 'Invalid Request', 
-      data    : null
-    },{ status : 400 });
-  }
-
-  const urls = payload.urls.split(',');
+export async function GET(req : any){
+  let urls = req.url;
+  urls = urls.split('?');
+  let value = [urls?.at(1)?.split('=')?.at(1)] || '';
 
   let responseData = [];
 
@@ -28,7 +18,7 @@ export async function POST(req : any,res  :any){
 
   try {
     const finalData = await pMap(
-      urls,
+      value,
       async (url) => {
         const { $ } = await cheerio.fetch(`https://www.amazon.in/dp/${url}`);
         const title = $('#productTitle').text().trim();
@@ -82,7 +72,7 @@ export async function POST(req : any,res  :any){
     },{ status : 200 });
 
   } catch (err  :any) {
-    NextResponse.json({
+    return NextResponse.json({
       success: false,
       message: err.message,
       data: null,
