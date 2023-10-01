@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import useSWR from 'swr'
  
-const fetcher = (...args) => fetch(...args).then((res) => res.json()).then((data)=>data?.data?.at(0));
+const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json()).then((data)=>data?.data?.at(0));
 
 interface ProductItemProps {
     productKey?     : string,
@@ -31,8 +31,6 @@ const  ProductItem : React.FC<ProductItemProps> = ({
            </div>
         );
     } 
-
-    console.log(itemData);
 
     return (
         <>
