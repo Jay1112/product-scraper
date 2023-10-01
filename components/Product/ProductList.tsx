@@ -1,12 +1,12 @@
 'use client';
 
-import ProductItem, { ProductItemView } from "./ProductItem";
+import ProductItem from "./ProductItem";
 
 interface ProductListProps {
-    responseData? : any
+    productText? : string
 }
 const ProductList : React.FC<ProductListProps> = ({
-    responseData
+    productText
 }) => {
 
     return (
@@ -26,9 +26,9 @@ const ProductList : React.FC<ProductListProps> = ({
           }
       >
         {
-          responseData?.data?.map((item:ProductItemView,index:number)=>{
+          productText?.split(',')?.map((item:string,index:number)=>{
             return(
-                <ProductItem key={index} itemData={item} />
+                <ProductItem key={index} productKey={item} />
             )
           })
         }
