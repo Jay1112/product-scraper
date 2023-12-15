@@ -31,44 +31,34 @@ export async function POST(req : any,res  :any){
       urls,
       async (url) => {
         const { $ } = await cheerio.fetch(`https://www.amazon.in/dp/${url}`);
-        const title = $('#productTitle').text().trim();
-        let mainPrice = '';
-        let mainPriceDiv = $('#corePriceDisplay_desktop_feature_div > .a-section.a-spacing-none.aok-align-center > .a-price.aok-align-center.reinventPricePriceToPayMargin.priceToPay > .a-offscreen');
-        if(typeof mainPriceDiv === 'object' &&
-            mainPriceDiv.hasOwnProperty('0'))
-        {
-            mainPrice = mainPriceDiv['0']?.children?.at(0)?.data || '' ;
-        }
-        const image = $('#landingImage').attr('src');
-        const dealText = $("#dealBadgeSupportContent_feature_div > span > .a-size-base.dealBadgeSupportingText.a-text-bold").text();
-        const mainMerchant = $("#merchant-info > .a-link-normal > span").eq(0).text();
-        const seller1Price = $("#mbc-price-1").text();
-        const seller1Name = $('#mbc-sold-by-1 > .a-size-small.mbcMerchantName').text();
-        const seller2Price = $("#mbc-price-2").text();
-        const seller2Name = $('#mbc-sold-by-2 > .a-size-small.mbcMerchantName').text();
-        const seller3Price = $("#mbc-price-3").text();
-        const seller3Name = $('#mbc-sold-by-3 > .a-size-small.mbcMerchantName').text();
-        const availability = $('#availability > span').text().trim();
-
-        const data = {
-          title,
-          mainPrice,
-          image,
-          dealText,
-          availability,
-          mainMerchant,
-          seller1Name,
-          seller1Price,
-          seller2Name,
-          seller2Price,
-          seller3Name,
-          seller3Price,
-        };
-
-        return {
-          ...data,
-          productKey: url,
-        };
+            const Seller_1 = $("#merchant-info > .a-link-normal").text();
+            const SL_1 = $("#corePriceDisplay_desktop_feature_div > .a-section.a-spacing-none.aok-align-center > .a-price.aok-align-center.reinventPricePriceToPayMargin.priceToPay");
+            let realPrice = '';
+            $(SL_1).each((index, element) => {
+                const price = $(element).text();
+                const priceArr = price.split('₹');
+                realPrice = priceArr.length > 1 ? priceArr[1] : '-';
+            });
+            const Deal_Text = $("#dealBadgeSupportingText > span").eq(0).text();
+            const SL_2 = $("#mbc-price-1").text().trim();
+            const Seller_2 = $("#mbc-sold-by-1 > .a-size-small.mbcMerchantName").text().trim();
+            const SL_3 = $("#mbc-price-2").text().trim();
+            const Seller_3 = $("#mbc-sold-by-2 > .a-size-small.mbcMerchantName").text().trim();
+        
+            const data = {
+                Seller_1,
+                SL_1 : realPrice,
+                Deal_Text,
+                Seller_2,
+                SL_2,
+                Seller_3,
+                SL_3
+            };
+        
+            return {
+                success : true,
+                ...data,
+            };
       },
       { concurrency } // Pass the concurrency limit to pMap
     );
